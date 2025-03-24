@@ -10,6 +10,7 @@ import AuthCallbackPage from "./pages/auth/auth-callback.page";
 import ProfilePage from "./pages/profile.page";
 import BookingsNavigation from "./routes/bookings.route";
 import TeacherSearchPage from "./pages/teacher-search.page";
+import NotFoundPage from "./pages/errors/not-found.page";
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
           <Route path="bookings" element={<BookingsNavigation/>} />
           <Route path="search" element={<TeacherSearchPage/>} />
         </Route>
+        <Route path="*" element={<NotFoundPage/>} />
       </Routes>
       <Toast />
     </>
