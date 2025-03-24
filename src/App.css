@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components {
+    .edu-gradient-bg {
+      @apply bg-gradient-to-r from-edu-primary to-edu-accent;
+    }
+    
+    .edu-card {
+      @apply rounded-xl border border-gray-200 bg-white p-6 shadow-md
+             transition-all hover:shadow-lg;
+    }
+  }
+
+
+  .edu-tag{
+    @apply px-4 py-2 rounded-md text-xs bg-edu-primary text-white transition-all
+  }
+  
+
+  .edu-button {
+    @apply px-6 py-2 rounded-lg font-medium transition-colors;
+    
+    &.primary {
+      @apply bg-edu-primary text-white hover:bg-edu-secondary;
+    }
+    
+    &.secondary {
+      @apply border-2 border-edu-primary text-edu-primary;
+    }
+  }
