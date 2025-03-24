@@ -5,6 +5,7 @@ import { ActionWithPayload } from "@/utils/reducer/reducer.utils";
 import { IProfile, IUser, UserRole } from "@/api/types";
 import {
   logoutFailure,
+  logoutStart,
   logoutSuccess,
   registerFailure,
   registerSuccess,
@@ -85,6 +86,7 @@ function* registerUser({
       }
       yield put(registerSuccess(createdUser));
     }
+    yield put(logoutStart());
     yield put(
       setSuccessToast(
         "Sign up successfull ! Check your mail box (or your spams) to active your account."

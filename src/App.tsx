@@ -20,7 +20,7 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Navigate to={"/me"} />} />
-        <Route path="/callback" element={<AuthCallbackPage />} />
+        <Route path="auth/callback" element={<AuthCallbackPage />} />
         <Route path="auth/signin" element={<SignInPage />} />
         <Route path="auth/signup" element={<SignUpPage />} />
         <Route path="profile/:userId" element={<ProfilePage />} />
