@@ -71,7 +71,7 @@ const TeacherSearchPage = () => {
               <nav className="flex items-center space-x-8">
                 {/* <Link to="/" className="text-white hover:underline">Home</Link> */}
                 {/* <Link to="/search" className="text-black hover:underline">Find Teacher</Link> */}
-                <Link to="/teachers" className="text-black hover:underline">My Teachers</Link>
+                {/* <Link to="/teachers" className="text-black hover:underline">My Teachers</Link> */}
               </nav>
 
               <div className="flex items-center space-x-4">

@@ -30,8 +30,9 @@ const SubjectsModal = ({ open, onOpenChange, selectedSubjects }: SubjectsModalPr
   }, [currentUserLoading])
 
   const availableSubjects = [
-    'Mathematics', 'Physics', 'Chemistry',
-    'Biology', 'Computer Science', 'History'
+    'Python', 'Java', 'C++',
+    'Mathematics', 'Geography', 'History',
+    'Biology', 'Accounting'
   ].filter(subject =>
     subject.toLowerCase().includes(searchQuery.toLowerCase()) &&
     !localSubjects.includes(subject)
