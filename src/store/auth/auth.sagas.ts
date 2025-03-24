@@ -87,7 +87,7 @@ function* registerUser({
     }
     yield put(
       setSuccessToast(
-        "Inscription réussie ! Veuillez vérifier votre email pour activer votre compte."
+        "Sign up successfull ! Check your mail box (or your spams) to active your account."
       )
     );
   } catch (error) {
