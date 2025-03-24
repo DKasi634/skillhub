@@ -11,7 +11,9 @@ export const supabaseSignUp = async (
     `Starting signup with email : ${email} and password : ${password}`
   );
   try {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({ email, password, options:{
+      emailRedirectTo:`${window.location.origin}/callback`
+    } });
 
     if (error) {
       throw new Error(error.message);
