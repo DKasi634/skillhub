@@ -67,6 +67,7 @@ function* registerUser({
     let createdProfile: IProfile | null = null;
     if (createdUser) {
       const newUserProfile: IProfile = {
+        id:getNewUUID(),
         user_id: createdUser.id,
         name: `${firstName} ${lastName}`,
         profile_image_url: `https://placehold.co/200x200/207fff/FFF?text=${
@@ -158,6 +159,7 @@ function* googleSignInComplete({
     if (createdUser) {
       // console.log("Created user exists :", createdUser)
       const newUserProfile: IProfile = {
+        id:getNewUUID(),
         user_id: createdUser.id,
         name: displayName,
         profile_image_url:
@@ -241,6 +243,7 @@ function* updateProfile({
   payload: profile,
 }: ActionWithPayload<AUTH_ACTION_TYPES.UPDATE_USER_START, IProfile>) {
   try {
+    console.log("\nUpdate started , with profile : ", profile)
     const updatedProfile: IProfile | null = yield call(
       createOrUpdateProfile,
       profile.user_id,

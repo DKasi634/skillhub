@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
-import NewTeacherCard from "@/components/cards/new-teacher-card.component";
+import NewTeacherCard from "@/components/cards/teacher-card.component";
 import NewTeacherDetails from "@/components/teacher-details/new-teacher-details.component";
 import { getTeachers, getTeachersBySubject, getTeachersByName } from "@/utils/supabase/supabase.utils";
 import { IProfile } from "@/api/types";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "@/store/auth/auth.selector";
-import { Link } from "react-router-dom";
 import BaseButton, { buttonType } from "@/components/buttons/base-button.component";
 import AbsoluteLoaderLayout from "@/components/loader/absolute-loader-layout.component";
-import GenericImage from "@/components/generic-image/generic-image.component";
 
 type SearchMode = "subject" | "name";
 
@@ -60,31 +58,7 @@ const TeacherSearchPage = () => {
   return (
     <>
       {currentUser.user && (
-        <div className="min-h-screen bg-gradient-to-br from-blue-200 via-purple-200 to-white p-8 relative">
-          <div className="max-w-7xl mx-auto bg-white backdrop-blur-md rounded-3xl overflow-hidden shadow-2xl">
-            {/* Header */}
-            <header className="px-8 py-4 border-b border-gray-300 flex items-center justify-between">
-              <div className="flex items-center space-x-2 text-black">
-                <span className="text-xl font-semibold">SkillHub</span>
-              </div>
-
-              <nav className="flex items-center space-x-8">
-                {/* <Link to="/" className="text-white hover:underline">Home</Link> */}
-                {/* <Link to="/search" className="text-black hover:underline">Find Teacher</Link> */}
-                {/* <Link to="/teachers" className="text-black hover:underline">My Teachers</Link> */}
-              </nav>
-
-              <div className="flex items-center space-x-4">
-                <Link to={`/me/profile`} className="w-8 aspect-square overflow-hidden rounded-full">
-                  <GenericImage
-                    src={currentUser.profile?.profile_image_url || ""}
-                    className="w-full h-full object-cover"
-                    alt={currentUser.profile?.name || "Profile"}
-                  />
-                </Link>
-              </div>
-            </header>
-
+        <div className="min-h-screen w-full h-full relative">
             {/* Main Content */}
             <div className="flex min-h-screen">
               {/* Main Content Area */}
@@ -157,7 +131,6 @@ const TeacherSearchPage = () => {
                 )}
               </div>
             </div>
-          </div>
           {isLoading && (<AbsoluteLoaderLayout /> )}
         </div>
       )}

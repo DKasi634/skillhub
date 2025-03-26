@@ -19,15 +19,11 @@ export const EditProfileButton = () => {
         <Edit className="w-4 h-4" />
         Edit Profile
       </button>
-
+      {(currentUser && currentUser.profile && currentUser.user) &&
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <EditProfileForm initialData={{
-          name: currentUser.profile?.name || "",
-          bio: currentUser.profile?.bio || "",
-          ratePerHour: currentUser.profile?.rate_per_hour || 0,
-          avatar: currentUser.profile?.profile_image_url || ""
-        }} />
+        <EditProfileForm initialProfile={currentUser.profile} />
       </Dialog>
+      }
     </>
   );
 };

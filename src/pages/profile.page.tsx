@@ -84,7 +84,7 @@ const ProfilePage = () => {
 
 
     return (
-        <div className="relative">
+        <div className="relative w-full min-h-screen">
             {(thisProfileUser && thisProfile) && (
                 <div className="max-w-6xl mx-auto px-4 py-8">
                     <ProfileHeader
@@ -94,7 +94,7 @@ const ProfilePage = () => {
                     />
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
                         <div className="lg:col-span-2">
-                            <ProfileBioSection bio={thisProfile.bio} editable={isOwnProfile} />
+                            <ProfileBioSection bio={thisProfile.bio} />
 
                             {/* Subjects list with an edit option for tutors */}
                             <div className="mb-4 flex justify-between items-center">

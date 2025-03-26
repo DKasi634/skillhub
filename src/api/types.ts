@@ -36,6 +36,7 @@ export enum UserRole {
   }
   
   export type IProfile = {
+    id:string,
     user_id: string;
     name: string;
     bio?: string;

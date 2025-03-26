@@ -20,7 +20,6 @@ const useAuth = () => {
   const [isHandlingSession, setIsHandlingSession] = useState(false);
 
   useEffect(() => {
-    console.log("\nLocation : ", window.location.origin)
     if(currentUser && currentUser.user && currentUser.profile){ 
       return
      }

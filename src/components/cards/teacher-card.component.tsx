@@ -1,66 +1,91 @@
-
-import { Bookmark, DollarSign } from "lucide-react";
+import { useEffect, useState } from "react";
 import GenericImage from "../generic-image/generic-image.component";
-
-export interface ITeacher {
-    id: number;
-    name: string;
-    role: string;
-    hourlyRate: number;
-    experience: string;
-    skills: string[];
-    imageUrl: string;
-  }
+import { getUserById, getProfileByUserId } from "@/utils/supabase/supabase.utils";
+import { IUser, IProfile, UserRole } from "@/api/types";
+import { Bookmark, DollarSign } from "lucide-react";
+import AbsoluteLoaderLayout from "../loader/absolute-loader-layout.component";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "@/store/auth/auth.selector";
+import { Link } from "react-router-dom";
 
 interface TeacherCardProps {
-    teacher: ITeacher;
+    className?: string,
+    teacherId: string;
     onClick: () => void;
     isSelected: boolean;
-  }
-  
-  const TeacherCard = ({ teacher, onClick, isSelected }: TeacherCardProps)=> {
-    return (
-      <div
-        className={`p-4 rounded-xl cursor-pointer transition-all ${
-          isSelected ? 'bg-gray-800 ring-2 ring-purple-500' : 'bg-gray-800/50 hover:bg-gray-800'
-        }`}
-        onClick={onClick}
-      >
-        <div className="flex justify-between items-start mb-4">
-          <div className="flex space-x-3">
-            <div className="w-12 aspect-square rounded-full overflow-hidden">
-              <GenericImage src={teacher.imageUrl}
-              alt={teacher.name} className="w-full h-full object-cover object-center" />
-            </div>
-            
-            <div>
-              <h3 className="text-white font-medium">{teacher.name}</h3>
-              <p className="text-gray-400 text-sm">{teacher.role}</p>
-            </div>
-          </div>
-          <Bookmark className="h-5 w-5 text-gray-400" />
-        </div>
-  
-        <div className="flex flex-wrap gap-2 mb-4">
-          {teacher.skills.map(skill => (
-            <span
-              key={skill}
-              className="px-3 py-1 bg-purple-600 text-white rounded-full text-sm"
-            >
-              {skill}
-            </span>
-          ))}
-        </div>
-  
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center text-gray-400">
-            <DollarSign className="h-4 w-4 mr-1" />
-            ${teacher.hourlyRate}/h
-          </div>
-          <span className="text-gray-400">{teacher.experience}</span>
-        </div>
-      </div>
-    );
-  }
+}
 
-  export default TeacherCard
+const NewTeacherCard = ({ className = "", teacherId, onClick, isSelected }: TeacherCardProps) => {
+    const [user, setUser] = useState<IUser | null>(null);
+    const [profile, setProfile] = useState<IProfile | null>(null);
+    const [loading, setLoading] = useState(true);
+    const currentUser = useSelector(selectCurrentUser);
+
+    useEffect(() => {
+        if (teacherId) {
+            fetchTeacherInfo();
+        }
+    }, [teacherId]);
+
+    const fetchTeacherInfo = async () => {
+        setLoading(true);
+        const userData = await getUserById(teacherId);
+        const profileData = await getProfileByUserId(teacherId);
+        setUser(userData);
+        setProfile(profileData);
+        setLoading(false);
+    };
+
+    return (
+        <div className={`${className} relative min-h-40`}>
+            {(user && profile) &&
+                <div
+                    className={`p-4 rounded-xl h-full cursor-pointer transition-all border border-black/30 shadow-sm shadow-black/20 ${isSelected ? "bg-black/10 ring-1 ring-purple-500" : "bg-gray-200/30  hover:bg-black/10"
+                        }`}
+                    onClick={onClick}
+                >
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="flex space-x-3">
+                            <div className="w-12 aspect-square rounded-full overflow-hidden">
+                                <GenericImage
+                                    src={profile.profile_image_url || ""}
+                                    alt={profile.name}
+                                    className="w-full h-full object-cover object-center"
+                                />
+                            </div>
+                            <div>
+                                <h3 className="text-black font-medium">{profile.name}</h3>
+                                <p className="text-gray-800 text-sm">Tutor</p>
+                            </div>
+                        </div>
+                        {(currentUser && currentUser.user && currentUser.user.role === UserRole.LEARNER) &&
+                            <Link to={`/profile/${teacherId}`}>
+                                <Bookmark className="h-5 w-5 text-edu-primary" />
+                            </Link>
+                        }
+                    </div>
+
+                    <div className="flex flex-wrap gap-2 mb-4">
+                        {profile.subjects.map((subject) => (
+                            <span key={subject} className="px-3 py-1 bg-purple-600 text-white rounded-full text-sm">
+                                {subject}
+                            </span>
+                        ))}
+                    </div>
+
+                    <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center text-gray-800">
+                            <DollarSign className="h-4 w-4 mr-1" />
+                            ${profile.rate_per_hour}/h
+                        </div>
+                        <span className="text-gray-800 line-clamp-1">{profile.bio}</span>
+                    </div>
+
+                </div>
+            }
+            {loading && <AbsoluteLoaderLayout />}
+        </div>
+    );
+};
+
+export default NewTeacherCard;

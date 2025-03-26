@@ -101,6 +101,7 @@ export const createOrUpdateProfile = async (
     if (profileError) {
       throw new Error(profileError.message);
     }
+    console.log("\nUpdated profile : ", profileData)
     return profileData as IProfile;
   } catch (error) {
     console.error("Error creating/updating profile:", error);

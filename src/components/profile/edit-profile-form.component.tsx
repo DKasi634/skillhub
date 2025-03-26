@@ -1,58 +1,78 @@
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import BaseButton from '@/components/buttons/base-button.component';
 import GenericInput from '@/components/generic-input/generic-input.component'
 import ImageUploadFormGroup from '../images-upload-input/image-upload-input.component';
+import { IProfile, UserRole } from '@/api/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { setErrorToast } from '@/store/toast/toast.actions';
+import { selectAuthLoading, selectCurrentUser } from '@/store/auth/auth.selector';
+import { updateProfileStart } from '@/store/auth/auth.actions';
 interface ProfileFormData {
-  name: string;
-  bio: string;
-  ratePerHour: number;
-  avatar?: string;
+  className?: string,
+  initialProfile: IProfile
 }
 
-const EditProfileForm = ({ initialData }: { initialData: ProfileFormData }) => {
+const EditProfileForm = ({ className = "", initialProfile }: ProfileFormData) => {
   const imageUploadRef = useRef<{
     uploadImages: () => Promise<string[]>;
     hasSelectedImages: () => boolean;
     getAvailableRemoteImages: () => string[]
-
   }>(null);
 
-  const [formData, setFormData] = useState<ProfileFormData>(initialData);
+  const [isLoading, setIsLoading] = useState(false);
+  const [canSubmit, setCanSubmit] = useState(false);
+  const currentUser = useSelector(selectCurrentUser);
+  const currentAuthLoading = useSelector(selectAuthLoading);
 
+  useEffect(() => {
+    if (canSubmit) {
+      console.log("Dispatching update")
+      dispatch(updateProfileStart(thisProfile));
+      setCanSubmit(false)
+    }
+  }, [canSubmit]);
+
+  useEffect(() => {
+    setIsLoading(currentAuthLoading)
+  }, [currentAuthLoading])
+
+  const [thisProfile, setThisProfile] = useState<IProfile>(initialProfile);
+  const dispatch = useDispatch();
+
+  const showError = (message: string) => {
+    dispatch(setErrorToast(message))
+  }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    console.log("Handling submit with loading : ", isLoading);
     try {
-      // Handle image upload first
-      // let avatarUrl = formData.avatar;
-      // if (imageUploadRef.current?.hasSelectedImages()) {
-      //   const urls = await imageUploadRef.current.uploadImages();
-      //   avatarUrl = urls[0] || '';
-      // }
-
-      // Add to handleSubmit function
-      // if (imageUploadRef.current?.hasSelectedImages()) {
-      //   try {
-      //     const urls = await imageUploadRef.current.uploadImages();
-      //     if (!urls.length) {
-      //       throw new Error('Image upload failed');
-      //     }
-      //     avatarUrl = urls[0];
-      //   } catch (error) {
-      //     dispatch(setErrorToast('Failed to upload profile image'));
-      //     return;
-      //   }
-      // }
-
-
+      if (isLoading) { return }
+      console.log("Checking name !")
+      setIsLoading(true);
+      if (!thisProfile.name.trim() || thisProfile.name.length <= 4) {
+        showError("Name is required. Must have at least 4 charachers"); throw new Error("Error on name")
+      }
+      if (currentUser && currentUser.user && currentUser.user.role == UserRole.TUTOR && !thisProfile.rate_per_hour) {
+        showError("Set a payment rate per hour"); throw new Error("Error on rate per hour")
+      }
+      console.log("Checked rate !")
+      if (imageUploadRef.current?.hasSelectedImages()) {
+        console.log("About to upload !")
+        const urls = await imageUploadRef.current.uploadImages();
+        if (urls.length) { setThisProfile(prev => ({ ...prev, profile_image_url: urls[0] } as IProfile)) }
+        console.log("Upload done !");
+      }
+      setCanSubmit(true);
+      console.log("Submit ended !")
     } catch (error) {
-      console.error('Profile update failed:', error);
+      setIsLoading(false);
+      console.log("\nError submitting : ", error)
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="edu-card p-6 space-y-6">
+    <form onSubmit={handleSubmit} className={`${className} edu-card p-6 space-y-6`}>
       {/* Image Upload Section */}
       <div className="border-b pb-6">
         <ImageUploadFormGroup
@@ -60,46 +80,40 @@ const EditProfileForm = ({ initialData }: { initialData: ProfileFormData }) => {
           imagesLimit={1}
           label="Profile Photo"
           folderPath="user-avatars"
-          initialImages={initialData.avatar ? [initialData.avatar] : []}
+          initialImages={thisProfile.profile_image_url ? [thisProfile.profile_image_url] : []}
         />
       </div>
 
       {/* Profile Details */}
       <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-2">Full Name</label>
-          <GenericInput
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            placeholder="John Doe"
-            required label={''} type={''} name={''} />
-        </div>
+        <GenericInput
+          value={thisProfile.name}
+          onChange={(e) => setThisProfile({ ...thisProfile, name: e.target.value })}
+          placeholder="John Doe"
+          required label={'Full Name'} type={''} name={'full_name'} />
 
-        <div>
-          <label className="block text-sm font-medium mb-2">Bio</label>
-          <GenericInput
-            label='Describe your teaching experience...'
-            type='text'
-            name='teaching_description'
-            value={formData.bio}
-            onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-            placeholder=""
-          />
-        </div>
+        <GenericInput
+          label='Bio'
+          type='text'
+          name='bio'
+          value={thisProfile.bio || ""}
+          onChange={(e) => setThisProfile({ ...thisProfile, bio: e.target.value })}
+          placeholder=""
+        />
 
-        <div>
-          <label className="block text-sm font-medium mb-2">Hourly Rate ($)</label>
+        {(currentUser && currentUser.user && currentUser.user.role === UserRole.TUTOR) &&
           <GenericInput
+            label="Hourly Rate ($)"
             type="number"
-            min="10"
-            step="5"
-            value={formData.ratePerHour}
-            onChange={(e) => setFormData({ ...formData, ratePerHour: Number(e.target.value) })} label={''} name={''} />
-        </div>
+            min="1"
+            value={thisProfile.rate_per_hour || 0}
+            onChange={(e) => setThisProfile({ ...thisProfile, rate_per_hour: Number(e.target.value) })} name={'h_rate'} />
+        }
+
       </div>
 
-      <BaseButton submitType="submit" className="w-full bg-blue-600 hover:bg-blue-700">
-        Save Profile
+      <BaseButton submitType="submit" className={`${isLoading ? '!cursor-not-allowed opacity-90' : ''}w-full bg-blue-600 hover:bg-blue-700`}>
+        {isLoading ? <>Saving...</> : <>Save</>}
       </BaseButton>
     </form>
   );
