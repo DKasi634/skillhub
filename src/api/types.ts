@@ -10,7 +10,7 @@ export enum UserRole {
     ADVANCED = 'ADVANCED',
   }
   
-  export enum ClassStatus {
+  export enum SessionStatus {
     SCHEDULED = 'SCHEDULED',
     ONGOING = 'ONGOING',
     COMPLETED = 'COMPLETED',
@@ -27,6 +27,7 @@ export enum UserRole {
     ACCEPTED = 'ACCEPTED',
     REJECTED = 'REJECTED',
     CANCELLED = 'CANCELLED',
+    SCHEDULED = 'SCHEDULED',
   }
   
   export interface IUser {
@@ -61,36 +62,33 @@ export enum UserRole {
   }
   
   
-  export interface Class {
+  export interface ITutoringSession {
     id: string;
-    tutorId: string;
-    title: string;
-    description?: string;
-    subjects: string[];
-    schedule: Record<string, string[]>; // Example: { monday: ["10:00-12:00"], wednesday: ["14:00-16:00"] }
-    price: number;
-    max_participants?: number;
-    status: ClassStatus;
+    tutor_id: string;
+    student_id:string,
+    payment_id:string,
+    subject:string,
+    status: SessionStatus;
     created_at: Date;
     updated_at: Date;
+    session_link?:string
+  }
+    
+  export type IPayment = {
+    id: string;
+    student_id: string;
+    tutor_id:string,
+    amount: number;
+    payment_status: PaymentStatus;
+    transaction_id?: string;
+    created_at: Date;
   }
   
+
   export interface ClassParticipant {
     id: string;
     class_id: string;
     learner_id: string;
     joined_at: string;
   }
-  
-  export interface Payment {
-    id: string;
-    class_id: string;
-    learner_id: string;
-    amount: number;
-    currency: string;
-    payment_status: PaymentStatus;
-    transaction_id?: string;
-    created_at: Date;
-  }
-  
   

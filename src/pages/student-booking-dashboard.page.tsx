@@ -98,6 +98,15 @@ const StudentBookingDashboardPage = () => {
                         </BaseButton>
                       </div>
                     )}
+                    {request.status === BookingStatus.ACCEPTED && (
+                      <div className="mt-2">
+                        <BaseButton
+                          href={`/me/session-payment?requestId=${request.id}&tutorId=${request.tutor_id}&subject=${request.subject}&amount=35`}
+                        >
+                          Pay & Confirm
+                        </BaseButton>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}

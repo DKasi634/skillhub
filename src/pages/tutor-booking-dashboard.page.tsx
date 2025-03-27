@@ -92,11 +92,12 @@ const TutorBookingDashboardPage = () => {
                                                 <BaseButton
                                                     type={buttonType.blue}
                                                     clickHandler={() => handleStatusUpdate(request.id, BookingStatus.ACCEPTED)}
+
                                                 >
                                                     Accept
                                                 </BaseButton>
                                                 <BaseButton
-                                                    type={buttonType.clear}
+                                                    type={buttonType.clear} rounded={false}
                                                     clickHandler={() => handleStatusUpdate(request.id, BookingStatus.REJECTED)}
                                                 >
                                                     Reject

@@ -112,7 +112,7 @@ const EditProfileForm = ({ className = "", initialProfile }: ProfileFormData) =>
 
       </div>
 
-      <BaseButton submitType="submit" className={`${isLoading ? '!cursor-not-allowed opacity-90' : ''}w-full bg-blue-600 hover:bg-blue-700`}>
+      <BaseButton submitType="submit" className={`${isLoading ? '!cursor-not-allowed opacity-90' : ''} !w-full bg-blue-600 hover:bg-blue-700`}>
         {isLoading ? <>Saving...</> : <>Save</>}
       </BaseButton>
     </form>

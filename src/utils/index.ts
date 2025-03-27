@@ -21,3 +21,19 @@ type ClassValue = string | boolean | null | undefined;
 export function cn(...classes: ClassValue[]): string {
   return classes.filter(Boolean).join(' ');
 }
+
+export const sendEmail = async (tutorEmail: string, studentEmail: string, subject: string, zoomLink: string):Promise<boolean> => {
+  try {
+    const response  = await fetch("/.netlify/functions/send-email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tutorEmail, studentEmail, subject, zoomLink }),
+    });
+    return !!response.ok
+  } catch (error) {
+    return false
+  }
+  
+};
+
+

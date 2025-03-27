@@ -11,6 +11,7 @@ import BookingsNavigation from "./routes/bookings.route";
 import TeacherSearchPage from "./pages/teacher-search.page";
 import NotFoundPage from "./pages/errors/not-found.page";
 import BaseNavigation from "./routes/base-navigation.route";
+import TutoringSessionPaymentPage from "./pages/tutor-session-payment.page";
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
           <Route path="profile" element={<ProfilePage />} />
           <Route path="bookings" element={<BookingsNavigation/>} />
           <Route path="search" element={<TeacherSearchPage/>} />
+          <Route path="session-payment" element={<TutoringSessionPaymentPage/>} />
         </Route>
         <Route path="*" element={<NotFoundPage/>} />
       </Routes>

@@ -1,7 +1,8 @@
-import { BookingStatus, IProfile, IUser, UserRole } from "@/api/types";
+import { BookingStatus, SessionStatus, IPayment, IProfile, ITutoringSession, IUser, PaymentStatus, UserRole } from "@/api/types";
 import { supabase } from "./supabase.config";
 
 import { IBookingRequest } from "@/api/types";
+import { getNewUUID } from "..";
 
 const SUPABASE_BUCKET_NAME = import.meta.env.VITE_SUPABASE_BUCKET_NAME;
 
@@ -144,10 +145,7 @@ export const createOrUpdateUser = async (
 /**
  * Create a new booking request.
  *
- * @param tutorId - The tutor's ID.
- * @param studentId - The student's ID.
- * @param requestedTime - Preferred date & time as an ISO string.
- * @param message - Optional message.
+ * @param request - The request object to create.
  * @returns The created booking request or an error.
  */
 export const createBookingRequest = async (
@@ -156,6 +154,24 @@ export const createBookingRequest = async (
   const { data, error } = await supabase
     .from("booking_requests")
     .insert([{...request}]).select()
+    .single();
+  if(error){
+    return null
+  }
+  return data as IBookingRequest
+};
+
+/**
+ * Fetch a booking request based on that request's Id.
+ *
+ * @param requestId - The requestId's ID.
+ * @returns The fetched booking request or an error.
+ */
+export const getBookingRequestById = async (
+  requestId:string
+): Promise<IBookingRequest|null> => {
+  const { data, error } = await supabase
+    .from("booking_requests").select().eq("id", requestId)
     .single();
   if(error){
     return null
@@ -287,8 +303,7 @@ export const getTeachersBySubject = async (subject: string): Promise<ITeacherPro
     .from("profiles")
     .select(`*, user:users(id, role, email)`)
     .eq("user.role", UserRole.TUTOR)
-    // cs operator: checks if the subjects array contains the given subject.
-    .contains("subjects", [subject]);
+    .contains("subjects", [(String(subject).charAt(0).toUpperCase()+ String(subject).slice(1))]);
     
   if (error) {
     console.error("Error fetching teachers by subject:", error);
@@ -308,11 +323,106 @@ export const getTeachersByName = async (name: string): Promise<ITeacherProfile[]
     .from("profiles")
     .select(`*, user:users(id, role, email)`)
     .eq("user.role", UserRole.TUTOR)
-    .ilike("name", `%${name}%`);
+    .ilike("name", `%${name.toLocaleLowerCase()}%`);
     
   if (error) {
     console.error("Error fetching teachers by name:", error);
     return null;
   }
   return data as ITeacherProfile[];
+};
+
+
+/**
+ * Inserts a IPayment record into Supabase.
+ */
+export const createPayment = async (
+  payment:IPayment
+): Promise<IPayment | null> => {
+  const { data, error } = await supabase
+    .from("payments")
+    .insert([ payment])
+    .select()
+    .single();
+  if (error) {
+    console.error("Error creating payment record:", error);
+    return null;
+  }
+  return data as IPayment;
+};
+
+/**
+ * Inserts a Tutoring Session record into Supabase.
+ */
+export const createTutoringSession = async (
+  tutoring_session:ITutoringSession,
+): Promise<ITutoringSession | null> => {
+  const { data, error } = await supabase
+    .from("tutoring_sessions")
+    .insert([
+      tutoring_session
+    ])
+    .select()
+    .single();
+  if (error) {
+    console.error("Error creating tutoring session:", error);
+    return null;
+  }
+  return data as ITutoringSession;
+};
+
+
+/**
+ * Processes a tutoring session payment after receiving a successful PaymentIntent from Stripe.
+ * 
+ * @param tutor_id - The tutor's user ID.
+ * @param student_id - The student's user ID.
+ * @param subject - The subject of the tutoring session.
+ * @param amount - The session fee (in dollars).
+ * @param transaction_id - The Stripe PaymentIntent ID.
+ * @param session_link - (Optional) The link to the session (e.g., Zoom URL).
+ * @returns An object containing the created tutoring session and payment records, or null on error.
+ */
+export const processTutoringSessionPayment = async (
+  tutor_id: string,
+  student_id: string,
+  subject: string,
+  amount: number,
+  transaction_id: string,
+  session_link?: string,
+): Promise<{ session: ITutoringSession | null; payment: IPayment | null } | null> => {
+  const dateNow = new Date();
+  // Prepare the new Payment record
+  const newPayment: IPayment = {
+    id: getNewUUID(),
+    transaction_id,
+    amount,
+    payment_status: PaymentStatus.COMPLETED,
+    created_at: dateNow,
+    student_id,
+    tutor_id,
+  };
+  
+  // Create Payment record in Supabase
+  const payment = await createPayment(newPayment);
+  if (!payment) return null;
+
+  // Prepare the new Tutoring Session record
+  const newTutoringSession: ITutoringSession = {
+    id: getNewUUID(),
+    tutor_id,
+    student_id,
+    subject,
+    payment_id: payment.id,
+    session_link,
+    status: SessionStatus.SCHEDULED,
+    created_at: dateNow,
+    updated_at: dateNow,
+  };
+  
+  // Create Tutoring Session record in Supabase
+  const session = await createTutoringSession(newTutoringSession);
+  if (!session) return null;
+  
+  return { session, payment };
 };

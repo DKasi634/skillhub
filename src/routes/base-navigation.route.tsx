@@ -25,18 +25,18 @@ const BaseNavigation = () => {
 
     return (
         <>
-            {currentUser.user && (
-                <div className="min-h-screen bg-gradient-to-br from-blue-200 via-purple-200 to-white p-8 relative">
+            {(currentUser && currentUser.user) && (
+                <div className="min-h-screen bg-gradient-to-br from-blue-200 via-purple-200 to-white py-6 px-2 lg:p-8 relative">
                     <div className="max-w-7xl mx-auto bg-white backdrop-blur-md rounded-3xl overflow-hidden shadow-2xl">
                         {/* Header */}
                         <header className="px-8 py-4 border-b border-gray-300 flex items-center justify-between">
-                            <div className="flex items-center space-x-2 text-black">
+                            <Link to={"/"} className="flex items-center space-x-2 text-black">
                                 <span className="text-xl font-semibold">SkillHub</span>
-                            </div>
+                            </Link>
 
                             <nav className="flex items-center justify-center gap-4">
-                                <Link to="/" className="text-black hover:underline">Home</Link>
-                                <Link to="/me/bookings" className="text-black hover:underline">My Requests</Link>
+                                <Link to="/" className="text-black hover:underline text-xs lg:text-sm font-bold">Home</Link>
+                                <Link to="/me/bookings" className="text-black hover:underline text-xs lg:text-sm font-bold">My Requests</Link>
                                 {/* <Link to="/teachers" className="text-black hover:underline">My Teachers</Link> */}
                             </nav>
 
