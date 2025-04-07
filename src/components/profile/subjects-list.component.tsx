@@ -6,7 +6,7 @@ interface SubjectsListProps {
     role: UserRole;
   }
   
-  const SubjectsList = ({ subjects, role }: SubjectsListProps) => (
+  const SubjectsList = ({ subjects=[], role }: SubjectsListProps) => (
     <div className="edu-card p-6">
       <h3 className="text-lg font-semibold mb-4">
         {role === UserRole.TUTOR ? 'Teaching Subjects' : 'Learning Interests'}

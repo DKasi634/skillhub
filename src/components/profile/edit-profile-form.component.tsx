@@ -27,7 +27,7 @@ const EditProfileForm = ({ className = "", initialProfile }: ProfileFormData) =>
 
   useEffect(() => {
     if (canSubmit) {
-      console.log("Dispatching update")
+      // console.log("Dispatching update")
       dispatch(updateProfileStart(thisProfile));
       setCanSubmit(false)
     }
@@ -45,10 +45,8 @@ const EditProfileForm = ({ className = "", initialProfile }: ProfileFormData) =>
   }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Handling submit with loading : ", isLoading);
     try {
       if (isLoading) { return }
-      console.log("Checking name !")
       setIsLoading(true);
       if (!thisProfile.name.trim() || thisProfile.name.length <= 4) {
         showError("Name is required. Must have at least 4 charachers"); throw new Error("Error on name")
@@ -56,18 +54,17 @@ const EditProfileForm = ({ className = "", initialProfile }: ProfileFormData) =>
       if (currentUser && currentUser.user && currentUser.user.role == UserRole.TUTOR && !thisProfile.rate_per_hour) {
         showError("Set a payment rate per hour"); throw new Error("Error on rate per hour")
       }
-      console.log("Checked rate !")
       if (imageUploadRef.current?.hasSelectedImages()) {
-        console.log("About to upload !")
+     // console.log("About to upload !")
         const urls = await imageUploadRef.current.uploadImages();
         if (urls.length) { setThisProfile(prev => ({ ...prev, profile_image_url: urls[0] } as IProfile)) }
-        console.log("Upload done !");
+     // console.log("Upload done !");
       }
       setCanSubmit(true);
-      console.log("Submit ended !")
+   // console.log("Submit ended !")
     } catch (error) {
       setIsLoading(false);
-      console.log("\nError submitting : ", error)
+   // console.log("\nError submitting : ", error)
     }
   };
 

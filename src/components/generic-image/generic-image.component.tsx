@@ -28,13 +28,15 @@ const GenericImage: React.FC<GenericImageProps> = ({
   };
 
   useEffect(() => {
-    setImageSrc(src);
-    setLoading(true); // Reset loading when the source changes
+    if (src && src.trim()) {
+      setImageSrc(src);
+      setLoading(true); // Reset loading when the source changes
+    }
   }, [src]);
 
   return (
     <div className={`relative inline-block ${className}`}>
-      {(hasShimmerEffect && loading )&& (
+      {(hasShimmerEffect && loading) && (
         <ShimerEffect className="absolute inset-0 w-full h-full bg-dark-variant" />
       )}
       <img

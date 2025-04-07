@@ -56,7 +56,7 @@ export const getProfileByUserId = async (
     }
     return data as IProfile;
   } catch (error) {
-    console.log("Something went wrong when getting the profile !");
+ // console.log("Something went wrong when getting the profile !");
     return null;
   }
 };
@@ -102,7 +102,7 @@ export const createOrUpdateProfile = async (
     if (profileError) {
       throw new Error(profileError.message);
     }
-    console.log("\nUpdated profile : ", profileData)
+ // console.log("\nUpdated profile : ", profileData)
     return profileData as IProfile;
   } catch (error) {
     console.error("Error creating/updating profile:", error);
@@ -156,6 +156,7 @@ export const createBookingRequest = async (
     .insert([{...request}]).select()
     .single();
   if(error){
+ // console.log(error)
     return null
   }
   return data as IBookingRequest

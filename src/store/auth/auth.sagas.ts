@@ -29,7 +29,7 @@ import {
   supabaseSignOut,
   supabaseSignUp,
 } from "@/utils/supabase/supabase.auth";
-import { User } from "@supabase/supabase-js";
+import {User } from "@supabase/supabase-js";
 import { getNewUUID } from "@/utils";
 
 function* registerUser({
@@ -52,7 +52,7 @@ function* registerUser({
     );
 
     if (!newAuthUser) {
-      throw new Error("Failed to create the user");
+      throw new Error("Either this user already eists or something went wrong !");
     }
 
     const userToCreate: IUser = {
@@ -112,12 +112,12 @@ function* emailSignIn({
       password
     );
     if (!user) {
-      throw new Error("Signin failed, something went wrong !");
+      throw new Error("Signin failed, Invalid credentails !");
     }
 
     const supabaseUser: IUser | null = yield call(getUserByEmail, email);
     if (!supabaseUser) {
-      throw new Error("Could not find user");
+      throw new Error("Oops, Could not find user");
     }
     yield put(setCurrentUser(supabaseUser.email));
   } catch (error) {
@@ -144,7 +144,7 @@ function* googleSignInComplete({
       throw new Error("Signin failed, something went wrong !");
     }
     const existingUser: IUser | null = yield call(getUserByEmail, email);
-    console.log("The existing user : ", existingUser);
+    // console.log("The existing user : ", existingUser);
     let createdUser: IUser | null = null;
     if (!existingUser) {
       const supabaseUser: IUser = {
@@ -155,7 +155,7 @@ function* googleSignInComplete({
       createdUser = yield call(createOrUpdateUser, supabaseUser);
     }
     let createdProfile: IProfile | null = null;
-    console.log("The created user : ", createdUser)
+ // console.log("The created user : ", createdUser)
     if (createdUser) {
       // console.log("Created user exists :", createdUser)
       const newUserProfile: IProfile = {
@@ -208,7 +208,7 @@ function* setAuthUser({
   payload: email,
 }: ActionWithPayload<AUTH_ACTION_TYPES.SET_CURRENT_USER, string>) {
   try {
-    console.log("\nSETTING CURRENT USER...")
+    // console.log("\nSETTING CURRENT USER...")
     const thisUser: IUser | null = yield call(getUserByEmail, email);
     let thisUserProfile: IProfile | null = null;
     if (thisUser) {
@@ -217,7 +217,7 @@ function* setAuthUser({
     if (thisUser && thisUserProfile) {
       yield put(signInSuccess(thisUser, thisUserProfile));
     } else {
-      console.log("\nThis user : ", thisUser, "\n With profile : ", thisUserProfile)
+      // console.log("\nThis user : ", thisUser, "\n With profile : ", thisUserProfile)
       throw new Error("Something went wrong, no user or profile !");
     }
   } catch (error) {
@@ -243,7 +243,7 @@ function* updateProfile({
   payload: profile,
 }: ActionWithPayload<AUTH_ACTION_TYPES.UPDATE_USER_START, IProfile>) {
   try {
-    console.log("\nUpdate started , with profile : ", profile)
+ // console.log("\nUpdate started , with profile : ", profile)
     const updatedProfile: IProfile | null = yield call(
       createOrUpdateProfile,
       profile.user_id,

@@ -210,7 +210,7 @@ const SignUpPage: React.FC = () => {
             error={errors.confirmPassword}
           />
 
-          <p className="w-full text-xs !mt-8">Already have an account ? <Link to={"auth/signin"} onMouseDown={handleNavigateToSignin} className="text-green font-bold px-2 underline-offset-2 underline">Login</Link> </p>
+          <p className="w-full text-xs !mt-8">Already have an account ? <Link to={"/auth/signin"} onMouseDown={handleNavigateToSignin} className="text-green font-bold px-2 underline-offset-2 underline">Login</Link> </p>
 
           {/* Submit Button */}
           <BaseButton

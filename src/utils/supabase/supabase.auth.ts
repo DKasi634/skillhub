@@ -20,7 +20,7 @@ export const supabaseSignUp = async (
     }
     return data.user;
   } catch (error) {
-    console.log("Error signing up : ", error);
+ // console.log("Error signing up : ", error);
     return null;
   }
 };
@@ -30,7 +30,7 @@ export const supabaseSignInWithEmail = async (
   password: string
 ): Promise<User | null> => {
   // We should not rely on a returned user here, since we'll be catching them from the auth state changed listener
-  console.log("Signing in with email: ", email, " and pwd : ", password);
+  // console.log("Signing in with email: ", email, " and pwd : ", password);
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -40,7 +40,7 @@ export const supabaseSignInWithEmail = async (
     console.error("Error signing in:", error.message);
     return null;
   } else {
-    console.log("Signed in successfully with user : ", data.user);
+ // console.log("Signed in successfully with user : ", data.user);
     return data.user;
   }
 };

@@ -31,7 +31,7 @@ export const handler: Handler = async (event, context) => {
       currency,
     });
 
-    console.log("Returned payment intent : ", paymentIntent);
+ // console.log("Returned payment intent : ", paymentIntent);
     return {
       statusCode: 200,
       body: JSON.stringify(paymentIntent),

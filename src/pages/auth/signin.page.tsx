@@ -5,7 +5,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { emailSignInStart } from "@/store/auth/auth.actions";
 import { selectAuthLoading, selectCurrentUser } from "@/store/auth/auth.selector";
-// import GoogleSigninButton from "@/components/base-button/google-button.component";
 import GenericInput from "@/components/generic-input/generic-input.component";
 import { nextRouteLocation } from "@/types";
 import AbsoluteLoaderLayout from "@/components/loader/absolute-loader-layout.component";
@@ -20,17 +19,17 @@ const SignInPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const nextLocation:nextRouteLocation = location.state;
+  const nextLocation: nextRouteLocation = location.state;
 
-  useEffect(()=>{
-    if(currentUser && currentUser.user && currentUser.profile){
-      navigate( (nextLocation && nextLocation.fromRoute) ? nextLocation.fromRoute :  "/me")
+  useEffect(() => {
+    if (currentUser && currentUser.user && currentUser.profile) {
+      navigate((nextLocation && nextLocation.fromRoute) ? nextLocation.fromRoute : "/me")
     }
   }, [currentUser])
 
-  const handleNavigateToSignup = (e:React.MouseEvent<HTMLAnchorElement>) =>{
+  const handleNavigateToSignup = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    navigate("/auth/signup", { state:nextLocation })
+    navigate("/auth/signup", { state: nextLocation })
   }
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +53,7 @@ const SignInPage = () => {
     if (!value.trim()) {
       error = "Password is required";
     } else if (value.length < 6) {
-      error = "Password must be at least 6 characters"; 
+      error = "Password must be at least 6 characters";
     }
     setErrors((prevErrors) => ({ ...prevErrors, password: error }));
   };
@@ -72,10 +71,10 @@ const SignInPage = () => {
       return;
     }
     dispatch(emailSignInStart(email, password))
-    
+
   };
 
-  
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 relative">
@@ -96,13 +95,14 @@ const SignInPage = () => {
 
           {/* Password Input (Replaced with PasswordInput component) */}
           <PasswordInput
-            label="Password" 
+            label="Password"
             value={password}
             onChange={handlePasswordChange}
             error={errors.password}
           />
 
-          <p className="w-full text-xs !mt-8">Don't have an account ? <Link to={"/auth/signup"} onMouseDown={handleNavigateToSignup} className="text-green font-bold px-2 underline-offset-2 underline">Sign up</Link> </p>
+          <p className="w-full text-xs !mt-4">Don't have an account ? <Link to={"/auth/signup"} onMouseDown={handleNavigateToSignup} className="text-black font-bold px-2 underline-offset-2 underline">Sign up</Link> </p>
+          <Link to={"/auth/reset-password"} className="text-green-300 text-sm font-bold underline-offset-2 underline mt-2 cursor-pointer">Forgot password ?</Link>
 
           {/* Sign In Button */}
           <BaseButton
@@ -118,7 +118,7 @@ const SignInPage = () => {
         </form>
       </div>
 
-      {authLoading && <AbsoluteLoaderLayout/> }
+      {(authLoading) && <AbsoluteLoaderLayout />}
     </div>
   );
 };

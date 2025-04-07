@@ -32,6 +32,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({ label, value, onChange, e
           type={showPassword ? "text" : "password"}
           id={id}
           value={value}
+          required
           onChange={(e) => onChange(e.target.value)}
           placeholder={`${label.toLowerCase()}`}
           className={`mt-1 block w-full px-3 py-[0.6rem] rounded-lg bg-black/5 text-black text-sm font-semibold placeholder:text-black/60 sm:text-sm ${

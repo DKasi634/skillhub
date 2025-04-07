@@ -12,6 +12,8 @@ import TeacherSearchPage from "./pages/teacher-search.page";
 import NotFoundPage from "./pages/errors/not-found.page";
 import BaseNavigation from "./routes/base-navigation.route";
 import TutoringSessionPaymentPage from "./pages/tutor-session-payment.page";
+import ChangePasswordPage from "./pages/auth/change-password.page";
+import ResetPasswordPage from "./pages/auth/reset-password.page";
 
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
         <Route path="auth/callback" element={<AuthCallbackPage />} />
         <Route path="auth/signin" element={<SignInPage />} />
         <Route path="auth/signup" element={<SignUpPage />} />
+        <Route path="auth/reset-password" element={<ResetPasswordPage />} />
+        <Route path="auth/change-password" element={<ChangePasswordPage />} />
         <Route path="profile/:userId" element={<ProfilePage />} />
         <Route path="me" element={<BaseNavigation />}>
           <Route index element={<TeacherSearchPage />} />
