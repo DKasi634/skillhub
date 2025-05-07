@@ -67,7 +67,6 @@ function* registerUser({
     let createdProfile: IProfile | null = null;
     if (createdUser) {
       const newUserProfile: IProfile = {
-        id:getNewUUID(),
         user_id: createdUser.id,
         name: `${firstName} ${lastName}`,
         profile_image_url: `https://placehold.co/200x200/207fff/FFF?text=${
@@ -83,6 +82,7 @@ function* registerUser({
         newUserProfile
       );
       if (!createdUser || !createdProfile) {
+        console.log("\n\nCreated user : ", createdUser, "\n\nCreated Profile : ", createdProfile)
         throw new Error("Failed to register user ");
       }
       yield put(registerSuccess(createdUser));
@@ -94,6 +94,7 @@ function* registerUser({
       )
     );
   } catch (error) {
+    console.log("\n\nError in registration : ", error)
     yield put(registerFailure(error));
     yield put(setErrorToast(getAuthError(error).message));
   }
@@ -159,7 +160,6 @@ function* googleSignInComplete({
     if (createdUser) {
       // console.log("Created user exists :", createdUser)
       const newUserProfile: IProfile = {
-        id:getNewUUID(),
         user_id: createdUser.id,
         name: displayName,
         profile_image_url:
