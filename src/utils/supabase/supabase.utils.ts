@@ -16,7 +16,7 @@ export const uploadToSupabaseStorage = async (
     .upload(`${folderPath || "Generic"}/Image_${Date.now()}`, file);
 
   if (error) {
-    console.error("Error uploading image:", error);
+    // console.error("Error uploading image:", error);
     return null;
   }
 
@@ -34,7 +34,7 @@ export const getUserById = async (id: string): Promise<IUser | null> => {
     .single();
 
   if (error) {
-    console.error("Error fetching user by ID:", error.message);
+    // console.error("Error fetching user by ID:", error.message);
     return null;
   }
 

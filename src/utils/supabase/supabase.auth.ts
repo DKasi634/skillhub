@@ -7,9 +7,6 @@ export const supabaseSignUp = async (
   email: string,
   password: string
 ): Promise<User | null> => {
-  console.log(
-    `Starting signup with email : ${email} and password : ${password}`
-  );
   try {
     const { data, error } = await supabase.auth.signUp({ email, password, options:{
       emailRedirectTo:`${window.location.origin}/auth/callback`

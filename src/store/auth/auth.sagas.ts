@@ -82,7 +82,7 @@ function* registerUser({
         newUserProfile
       );
       if (!createdUser || !createdProfile) {
-        console.log("\n\nCreated user : ", createdUser, "\n\nCreated Profile : ", createdProfile)
+        // console.log("\n\nCreated user : ", createdUser, "\n\nCreated Profile : ", createdProfile)
         throw new Error("Failed to register user ");
       }
       yield put(registerSuccess(createdUser));
@@ -94,7 +94,7 @@ function* registerUser({
       )
     );
   } catch (error) {
-    console.log("\n\nError in registration : ", error)
+    // console.log("\n\nError in registration : ", error)
     yield put(registerFailure(error));
     yield put(setErrorToast(getAuthError(error).message));
   }

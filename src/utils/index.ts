@@ -31,6 +31,7 @@ export const sendEmail = async (tutorEmail: string, studentEmail: string, subjec
     });
     return !!response.ok
   } catch (error) {
+    
     return false
   }
   

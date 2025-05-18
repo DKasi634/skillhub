@@ -7,7 +7,10 @@ if (process.env.NODE_ENV !== "production") {
 
 // Configure the Nodemailer transporter
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  requireTLS: true,
   auth: {
     user: process.env.EMAIL_USER, // Your Gmail email address
     pass: process.env.EMAIL_PASSWORD, // Your Gmail app password
@@ -18,7 +21,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const handler: Handler = async (event) => {
-  console.log("\n Function called with user email : ", process.env.EMAIL_USER, " \n And pass : ", process.env.EMAIL_PASSWORD)
+  // console.log("\n Function called with user email : ", process.env.EMAIL_USER, " \n And pass : ", process.env.EMAIL_PASSWORD)
   try {
     const { tutorEmail, studentEmail, subject, zoomLink } = JSON.parse(event.body || "{}");
 
